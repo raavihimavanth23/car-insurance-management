@@ -1,7 +1,7 @@
 version: 0.2
 
 env:
-  parameter-store:
+  #parameter-store:
     # DB_HOST: "/path/to/db/host"
     # DB_NAME: "carinsurance"
     # DP_PORT: "3306"
