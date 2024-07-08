@@ -1,15 +1,15 @@
 version: 0.2
 
-env:
-  parameter-store:
-    DB_HOST: "/path/to/db/host"
-    DB_NAME: "carinsurance"
-    DP_PORT: "3306"
+#env:
+  #parameter-store:
+    # DB_HOST: "/path/to/db/host"
+    # DB_NAME: "carinsurance"
+    # DP_PORT: "3306"
      # key: "value"
      # key: "value"
   #secrets-manager:
-    DB_USER: "db_secret:username"
-    DB_PASSWORD: "db_secret:password"
+    # DB_USER: "db_secret:username"
+    # DB_PASSWORD: "db_secret:password"
   #exported-variables:
      # - variable
      # - variable
@@ -38,8 +38,8 @@ phases:
   build:
     commands:
       - echo build stage started
-      - python3 manage.py makemigrations
-      - python3 manage.py migrate
+      # - python3 manage.py makemigrations
+      # - python3 manage.py migrate
       - python3 manage.py collectstatic --noinput
       #- pylint todotask
       #- pytest
