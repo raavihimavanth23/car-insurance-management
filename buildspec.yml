@@ -27,8 +27,8 @@ phases:
       # name: version
       # name: version
     commands:
-      apt-get update
-      apt-get install libmysqlclient-dev
+      - apt-get update
+      - apt-get install libmysqlclient-dev
       # - command
       # - command
   pre_build:
