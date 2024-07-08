@@ -1,0 +1,143 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+{%load static%}
+{% load widget_tweaks %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+  
+  <style media="screen">
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,600);
+
+        .log-form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.log-form h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.log-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-form form .form-control {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.log-form form .form-control:focus {
+    border-color: #5cb85c;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+
+.log-form form .btn {
+    background-color: #5cb85c;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.log-form form .btn:hover {
+    background-color: #4cae4c;
+}
+
+.log-form form .btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+  </style>
+  <script>
+    $(document).ready(function(){
+        let policyTenure = 0;
+        $('#id_car').val('{{selected_car}}')
+        $('#id_policy').change(function(){
+                let policyId = $(this).val();
+                const data = {
+                    'car':'{{selected_car.id}}'
+                }
+                if(policyId){
+                    $.ajax({
+                        url: '/user/calculate-assurance-covered/' + policyId ,
+                        type: 'GET',
+                        data:data,
+                        success: function(data) {
+                            policyTenure=data.tenure;
+                            var policyDetails = '<h4>Policy Details:</h4>';
+                            policyDetails += '<p><strong>Name:</strong> ' + data.policy_name + '</p>';
+                            policyDetails += '<p><strong>Sum Assurance:</strong> ' + data.sum_assurance + '</p>';
+                            policyDetails += '<p><strong>Premium:</strong> ' + data.premium + '</p>';
+                            policyDetails += '<p><strong>Tenure:</strong> ' + data.tenure + ' years</p>';
+                            policyDetails += '<p><strong>Details:</strong> ' + data.details + '</p>';
+                        
+                            console.log('data recieved: ',data)
+                            $('#policyDetails').html(policyDetails);
+                        },
+                        error: function(error) {
+                            console.log('Error:', error);
+                        }
+                    });
+                } else {
+                    $('#policyDetails').html('<p class="text-danger">Please select a policy.</p>');
+                }
+            });
+            $('#id_start_date').change(function(){
+                var startDate = new Date($(this).val());
+                if(policyTenure && !isNaN(startDate.getTime())){
+                    startDate.setFullYear(startDate.getFullYear() + policyTenure);
+                    var endDate = startDate.toISOString().split('T')[0];  // Format to YYYY-MM-DD
+                    $('#id_end_date').val(endDate);
+                    console.log('{{form.end_date}}', 'end_date: ', endDate);
+                }
+            });
+    });
+  </script>
+</head>
+<div class="log-form">
+    <h2 class="text-center">Apply policy for <b>{{selected_car}}</b></h2><br>
+    <form method="post" autocomplete="off" >
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="policy">Policy</label>
+                {% render_field form.policy|attr:'required:true'  class="form-control p-1" placeholder="Select Policy" %}
+            </div>
+        </div>
+        <!-- <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="startdate">Start Date</label>
+                {% render_field form.start_date|attr:'required:true'  class="form-control" placeholder="Start Date" %}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="enddate">End Date</label>
+                {% render_field form.end_date|attr:'required:false' class="form-control" placeholder="End Date" %}
+            </div>
+        </div> -->
+        <div class="" id="policyDetails"></div>
+        <button type="submit" class="btn primary text-center">Apply Policy</button>
+    </form>
+</div>
+
+{% endblock content %}

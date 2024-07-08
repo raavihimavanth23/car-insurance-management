@@ -1,0 +1,123 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+{%load static%}
+{% load widget_tweaks %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+  
+  <style media="screen">
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,600);
+
+        .log-form {
+    max-width: 30%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.log-form h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.log-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-form form .form-control {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.log-form form .form-control:focus {
+    border-color: #5cb85c;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+
+.log-form form .btn {
+    background-color: #5cb85c;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.log-form form .btn:hover {
+    background-color: #4cae4c;
+}
+
+.log-form form .btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+  </style>
+  <script>
+    $(document).ready(function(){
+        
+    });
+  </script>
+</head>
+<div class="log-form">
+    <h2 class="text-center">Renew <b>{{car_policy.policy}}</b> policy for <b>{{car_policy.car}}</b></h2><br>
+    <form method="post" autocomplete="off" >
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-12">
+               <h4> <label for="car">Car Details</label></h4>
+               <div class="d-flex justify-content-around">
+                    <label for="brand">Brand</label>
+                    <span>:</span>
+                    <span>{{car_policy.car.car_make}}</span>
+               </div>
+               <div class="d-flex justify-content-around">
+                    <label for="model">Model</label>
+                    <span>:</span>
+                    <span>{{car_policy.car.car_model}}</span>
+                </div>
+                <div class="d-flex justify-content-around">
+                    <label for="year">Year</label>
+                    <span>:</span>
+                    <span>{{car_policy.car.car_year}}</span>
+                </div>
+                <div class="d-flex justify-content-around">
+                    <label for="license">License</label>
+                    <span>:</span>
+                    <span>{{car_policy.car.car_number}}</span>
+                </div>
+                <!-- {% render_field form.policy|attr:'required:true'  class="form-control p-1" placeholder="Select Policy" %} -->
+            </div>
+        </div>
+        <div class="form-row">
+               <h4> <label for="policy">Policy Details</label></h4>
+               <p><strong>Name:</strong> {{car_policy.policy.policy_name}}</p>
+               <p><strong>Premium:</strong> {{car_policy.policy.premium}}</p>
+               <p><strong>Tenure:</strong> {{car_policy.policy.tenure}} years</p>
+               <p><strong>Details:</strong> {{car_policy.policy.details}}</p>
+                <!-- {% render_field form.policy|attr:'required:true'  class="form-control p-1" placeholder="Select Policy" %} -->
+        </div>
+        <div>
+            <h3>Calculated sum_assurance:  <span class="text-success " style="font-weight:bolder">{{sum_assurance}}</span></h3>
+        </div>
+        
+        <button type="submit" class="btn primary text-center">Renew Policy</button>
+    </form>
+</div>
+
+{% endblock content %}

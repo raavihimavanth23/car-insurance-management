@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>customer login</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style media="screen">
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,600);
+
+        .log-form {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.log-form h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.log-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-form form .form-control {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.log-form form .form-control:focus {
+    border-color: #5cb85c;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+
+.log-form form .btn {
+    background-color: #5cb85c;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.log-form form .btn:hover {
+    background-color: #4cae4c;
+}
+
+.log-form form .btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+    </style>
+</head>
+
+<body>
+    {% include "common/navbar.html" %}
+
+    <div class="log-form">
+        <h2 class="text-center">LOGIN</h2><br>
+        <form method="post">
+            {% csrf_token %}
+            {% render_field form.username class="form-control" placeholder="Username" %}
+            <br>
+            {% render_field form.password class="form-control" placeholder="Password" %}
+            <br>
+            <button type="submit" class="btn primary text-center">Login</button>
+        </form>
+        <div class="signup-link text-center mt-3">
+            <p>Not a user? <a href="{% url 'user_signup' %}">Sign up here</a></p>
+        </div>
+    </div>
+    {% include "common/footer.html" %}
+</body>
+
+</html>
