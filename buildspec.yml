@@ -1,6 +1,6 @@
 version: 0.2
 
-env:
+#env:
   #parameter-store:
     # DB_HOST: "/path/to/db/host"
     # DB_NAME: "carinsurance"
