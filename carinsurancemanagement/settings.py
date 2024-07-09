@@ -77,7 +77,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'carinsurancemanagement.wsgi.application'
-
+CSRF_COOKIE_SECURE=False
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
