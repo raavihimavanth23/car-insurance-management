@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from decouple import config
+from mimetypes import add_type
+add_type("text/css", ".css", True)
+add_type("text/html", ".html", True)
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
@@ -133,10 +137,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
-STATICFILES_DIRS=[
-STATIC_DIR,
- ]
+# STATICFILES_DIRS=[
+# STATIC_DIR,
+#  ]
 
 LOGIN_REDIRECT_URL='/post_login'
