@@ -43,7 +43,7 @@ phases:
       - echo build stage started
       # - python3 manage.py makemigrations
       # - python3 manage.py migrate
-      - python manage.py collectstatic --noinput
+      # - python manage.py collectstatic --noinput
       #- pylint todotask
       #- pytest
       # - command
