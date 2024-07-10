@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from decouple import config
 from mimetypes import add_type
 add_type("text/css", ".css", True)
 add_type("text/html", ".html", True)
