@@ -1,5 +1,5 @@
 asgiref
-Django==2.1
+Django
 django-widget-tweaks
 pytz
 sqlparse
@@ -10,6 +10,6 @@ pytest-django
 mixer
 pylint
 pylint-django
-# mysqlclient
+mysqlclient
 gunicorn==20.1.0
 django-core
