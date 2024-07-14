@@ -1,0 +1,64 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+{%load static%}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+
+  <style media="screen">
+    a:link {
+      text-decoration: none;
+    }
+
+    h6 {
+      text-align: center;
+    }
+
+    .row {
+      margin: 100px;
+    }
+  </style>
+</head>
+<br><br>
+<div class="container">
+  <div class="float-end m-1" style="font-family: 'Times New Roman', Times, serif;margin-right: 10px;">
+  <a class="btn btn-info  btn-md" href="{% url 'add_damage'  %}" data-toggle="tooltip" data-placement="bottom" title="add damage" ><span class="glyphicon glyphicon-plus"> Add Car Damage</span></a>
+  </div>
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h6 class="panel-title">Cars Damages</h6>
+    </div>
+    <table class="table table-hover" id="dev-table">
+      <thead>
+        <tr>
+        <th>Serial No.</th>
+          <th>Damage</th>
+          <th>Car</th>
+          <th>Severity</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      {% for car_defect in car_damages %}
+      <tr>
+        <td> {{ forloop.counter }}</td>
+        <td>{{car_defect.name}}</td>
+        <td> {{car_defect.car}}</td>
+        <td> {% if car_defect.severity == "Low" %}
+            <span class="badge badge-success bg-info">Low</span>
+        {% elif car_defect.severity == "Moderate" %}
+            <span class="badge badge-warning bg-warning">Moderate</span>
+        {% elif car_defect.severity == "Severe" %}
+            <span class="badge badge-danger bg-danger">Severe</span>
+        {% else %}
+            <span class="badge badge-secondary bg-secondary">{{car_defect.severity}}</span>
+        {% endif %}
+        </td>
+        <td> {{car_defect.description}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+{% endblock content %}

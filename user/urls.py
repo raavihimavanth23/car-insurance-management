@@ -8,7 +8,8 @@ urlpatterns = [
     # path('customerclick', views.afterlogin_view,name='customerclick'),
     path('signup', user_views.user_signup_view,name='user_signup'),
     # path('customer-dashboard', views.customer_dashboard_view,name='customer-dashboard'),
-    path('login', LoginView.as_view(template_name='user/login.html'),name='user_login'),
+    # path('login', LoginView.as_view(template_name='user/login.html'),name='user_login'),
+    path('login', user_views.login_view, name='user_login'),
     path('user-dashboard', user_views.user_dashboard_view,name='user_dashboard'),
     path('user-policies', view= user_views.user_policies_view, name='user_policies'),
     path('renew-policy/<int:pk>',user_views.renew_policy_view, name='renew_policy'),
@@ -18,7 +19,8 @@ urlpatterns = [
     path('calculate-assurance-covered/<int:pk>', user_views.calculate_car_assurance, name='calculate_assurance_covered'),
     path('add-car', user_views.add_car_view,name='add_car'),
     path('claim-assurance/<int:pk>', user_views.claim_assurance_view, name='claim_assurance'),
-    # path('apply/<int:pk>', views.apply_view,name='apply'),
+    path('car-damages', user_views.car_damages_view,name='car_damages'),
+    path('add-damage', user_views.add_damage_view, name='add_damage')
     # path('history', views.history_view,name='history'),
 
     # path('ask-question', views.ask_question_view,name='ask-question'),

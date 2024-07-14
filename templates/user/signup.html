@@ -113,13 +113,17 @@
     {% include "common/navbar.html" %}
 
      <!-- alert box-->
-  {% if message  %}
-    <div class="row mx-3 mt-3 w-100">
-      {{message.data}}
-    </div>
-  {% endif %} 
+  
   <!-- alert box end-->
     <div class="log-form">
+        <div>{% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div> 
         <h2 class="text-center">USER SIGNUP</h2><br>
         <form method="post" autocomplete="off" enctype="multipart/form-data">
             {% csrf_token %}

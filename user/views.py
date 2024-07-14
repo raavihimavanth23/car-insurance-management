@@ -1,40 +1,72 @@
-from django.shortcuts import render,redirect,reverse
+from django.shortcuts import render,redirect
 from . import forms,models
+from django import forms as DJFORM
 from django.db.models import Sum
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required,user_passes_test
-from django.conf import settings
 from django.http import JsonResponse
-from datetime import date, datetime, timedelta
-from django.db.models import Q
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from carinsurance import models as INS_MODAL
 from carinsurance import forms as INS_FORM
+from library.insurance_calculator import calculate_max_assurance
+import library.validate as validate
+from library import date_util as du
+from library.carinsurance_exception import CarInsuranceException
+import os
+import boto3
+session = boto3.Session(
+    aws_access_key_id= os.getenv('S3_ACCESS_KEY'),
+    aws_secret_access_key = os.getenv('S3_SECRET_KEY')
+)
+
+def login_view(request):
+    form = forms.UserForm()
+    data = {'form':form}
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password1')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('/post_login')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'user/login.html', context = data)
+
 # Create your views here.
 def user_signup_view(request):
     userForm = forms.UserForm()
     customerForm = forms.CustomerForm()
-    message = {'status':'SUCCESS', 'data':'Registration is mandatory.'}
-    data = {'userForm':userForm, 'customerForm': customerForm, 'message':message}
+    # message = {'status':'SUCCESS', 'data':'Registration is mandatory.'}
+    data = {'userForm':userForm, 'customerForm': customerForm}
     if request.method == 'POST':
         userForm = forms.UserForm(request.POST)
         customerForm = forms.CustomerForm(request.POST, request.FILES)
         # print('userForm: ',userForm, 'customerForm: ', customerForm)
-        if userForm.is_valid() and customerForm.is_valid():
-            user = userForm.save()
-            print('saved user: ', user)
-            # user.set_password(user.password)
-            customer =  customerForm.save(commit=False)
-            customer.user = user
-            customer.save()
-            print('saved customer: ', customer)
-            customer_group = Group.objects.get_or_create(name='CUSTOMER')
-            customer_group[0].user_set.add(user)
-        else:
-            print('userformerrors: ', userForm.errors, 'customerformerrors: ',customerForm.errors)
-        return HttpResponseRedirect('login')
+        try:
+            if userForm.is_valid() and customerForm.is_valid():
+                user = userForm.save()
+                print('saved user: ', user)
+                customer =  customerForm.save(commit=False)
+                customer.user = user
+                profile_photo  = request.FILES["profile_photo"]
+                # print('profile_pic: ', profile_photo)
+                customer.save()
+                print('saved customer: ', customer)
+                customer_group = Group.objects.get_or_create(name='CUSTOMER')
+                customer_group[0].user_set.add(user)
+                return HttpResponseRedirect('login')
+            else:
+                messages.error(request, userForm.errors)
+                messages.error(request, customerForm.errors)
+        except DJFORM.ValidationError as e:
+            print('exception :',str(e))
+            messages.error(request, str(e))
+        
     return render(request, 'user/signup.html', context= data)
 
 @login_required(login_url='login')
@@ -69,10 +101,10 @@ def user_policies_view(request):
     data ={'user_policies': user_policies, 'user':get_customer_details(request.user)}
     return render(request, 'user/user_policies.html', data)
 
-
 def get_customer_details(user):
     return models.Customer.objects.get(user=user)
 
+@login_required(login_url='login')
 def renew_policy_view(request, pk):
     print('renew policy key: ', pk)
     car_policy = INS_MODAL.CarPolicy.objects.get(id=pk)
@@ -84,8 +116,8 @@ def renew_policy_view(request, pk):
         policy = car_policy.policy
         if policy:
             tenure_years = policy.tenure
-            start_date = datetime.now().date()
-            end_date = start_date + timedelta(days=tenure_years*365)
+            start_date = du.datetime.date
+            end_date = du.date_plus(start_date, tenure_years*365)
             car_policy.start_date = start_date
             car_policy.end_date = end_date 
             car_policy.is_active=True
@@ -121,21 +153,32 @@ def apply_policy_view(request, pk):
             if policy:
                 tenure_years = policy.tenure
                 start_date = datetime.now().date()
+                sum_assurance = calculate_max_assurance(car, policy, [])
                 end_date = start_date + timedelta(days=tenure_years*365)
                 car_policy.start_date = start_date
                 car_policy.end_date = end_date 
                 car_policy.amount_claimed = 0
+                car_policy.sum_assurance = sum_assurance
+                validate.check_apply_policy(car_policy)
                 car_policy.save()
                 print('car_policy: ', car_policy)
-            return HttpResponseRedirect('user_policies')
+            return HttpResponseRedirect('/user/user-policies')
     data = {'form': car_policy_form, 'user':get_customer_details(request.user), 'selected_car':car}
     return render(request, 'user/add_policy.html', data)
 
 def calculate_car_assurance(request, pk):
     print('policy: ', pk, 'car: ', request.GET.get('car'))
     policy = INS_MODAL.Policy.objects.get(policy_id=pk)
+    car = INS_MODAL.Car.objects.get(id= request.GET.get('car'))
+    car_policy = INS_MODAL.CarPolicy.objects.filter(car = car)
+    print('car details: ', car.car_model, 'car_policy: ', car_policy)
+    previous_claims = []
+    for cp in car_policy:
+        previous_claims.append(INS_MODAL.Claim.objects.filter(policy = cp))
+    print('previous claims: ', previous_claims)
+    car_assurance = calculate_max_assurance(car, policy, previous_claims)
     data = {
-        'sum_assurance':policy.base_assurance,
+        'sum_assurance':car_assurance,
         'policy_name':policy.policy_name,
         'premium':policy.premium,
         'tenure':policy.tenure,
@@ -149,12 +192,19 @@ def add_car_view(request):
     data = {'user':get_customer_details(request.user),'form':car_form}
     if request.method == 'POST':
         car_form = INS_FORM.CarForm(request.POST)
-        if car_form.is_valid:
-            car = car_form.save(commit=False)
-            car.owner = request.user
-            car.save()
-            print('new car: ', car)
-            return HttpResponseRedirect('user_cars')
+        try:
+            if car_form.is_valid:
+                car = car_form.save(commit=False)
+                car.owner = request.user
+                validate.is_car_valid(car)
+                car.save()
+                print('new car: ', car)
+                return HttpResponseRedirect('/user/user-cars')
+            else:
+                messages.error(request, car_form.errors)
+        except CarInsuranceException as e:
+            print('Adding car error: ', e)
+            messages.error(request, str(e))
     return render(request, 'user/add_car.html', data)
 
 def claim_assurance_view(request, pk):
@@ -163,18 +213,51 @@ def claim_assurance_view(request, pk):
     prev_claims = INS_MODAL.Claim.objects.filter(policy=car_policy)
     form = INS_FORM.ClaimForm()
     data = {'user':get_customer_details(request.user),'previous_claims':prev_claims, 'form':form, 'car_policy':car_policy}
-    if request.method == 'POST':
-        claim_form = INS_FORM.ClaimForm(request.POST)
-        if claim_form.is_valid:
-            print('claim_form: :: ', claim_form)
-            claim = claim_form.save(commit=False)
-            claim.policy = car_policy
-            claim.claim_date = datetime.now().date()
-            claim.status = "Pending"
-            print('claimss: ', claim.description)
-            claim.save()
-            car_policy.amount_claimed+=claim.amount
-            car_policy.save()
-            return HttpResponseRedirect('user_claims')
+    try:
+        if request.method == 'POST':
+            claim_form = INS_FORM.ClaimForm(request.POST)
+            if claim_form.is_valid :
+                print('claim_form: :: ', claim_form)
+                claim = claim_form.save(commit=False)
+                claim.policy = car_policy
+                claim.claim_date = datetime.now().date()
+                claim.status = "Pending"
+                validate.check_claim(claim)
+                print('claim damage: ', claim.damage)
+                claim.save()
+                car_policy.amount_claimed+=claim.amount
+                car_policy.save()
+                damage =  claim.damage
+                damage.is_claimed=True
+                damage.save()
+                return HttpResponseRedirect('/user/user-claims')
+    except CarInsuranceException as e:
+        data['status'] = 'ERROR'
+        data['message'] = e.message
     print('data for claimassurance: ', data)
     return render(request, 'user/claim_assurance.html', data)
+
+def car_damages_view(request):
+    cars = INS_MODAL.Car.objects.filter(owner = request.user)
+    car_damages = []
+    for car in cars:
+        car_damages.extend(INS_MODAL.CarDefect.objects.filter(car = car ))
+    data = {'user': get_customer_details(request.user), 'car_damages': car_damages}
+    print('car damages: data: ',data)
+    return render(request, 'user/car_damages.html', data)
+def get_car(id):
+    return INS_MODAL.Car.objects.get(id=id)
+
+def add_damage_view(request):
+    damage_form = INS_FORM.CarDefectForm()
+    if request.method == 'POST':
+        damage_form = INS_FORM.CarDefectForm(request.POST)
+        if damage_form.is_valid:
+            damage = damage_form.save(commit=False)
+            print('damage: ', damage)
+            damage.save()
+            return HttpResponseRedirect('/user/car-damages')
+        else:
+            messages.error(request, damage_form.errors)
+    data = {'user': get_customer_details(request.user), 'form' : damage_form}
+    return render(request, 'user/add_damage.html', data)

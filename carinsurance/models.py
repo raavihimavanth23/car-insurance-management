@@ -31,10 +31,17 @@ class Car(models.Model):
     car_number = models.CharField(max_length=20, unique=True)
     vin = models.CharField(max_length=17, unique=True)
     policies = models.ManyToManyField(Policy, through='CarPolicy')
-
     def __str__(self):
-        return self.car_number
+        return f'{self.car_number} - {self.car_make}'
 
+class CarDefect(models.Model):
+    name = models.CharField(max_length=100, unique=True, default='')
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='defects')
+    description = models.CharField(max_length=255)
+    severity = models.CharField(max_length=100, choices=[('Low', 'Low'), ('Moderate', 'Moderate'), ('Severe', 'Severe')])
+    is_claimed = models.BooleanField(default=False)
+    def __str__(self):
+        return f'{self.car.car_number} - {self.name}'
 class CarPolicy(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     policy = models.ForeignKey(Policy, on_delete=models.CASCADE)
@@ -52,9 +59,8 @@ class Claim(models.Model):
     claim_date = models.DateField()
     amount = models.PositiveIntegerField()
     description = models.TextField()
-    damage = models.CharField(max_length=100, choices=[('Low', 'Low'), ('Moderate', 'Moderate'), ('Severe', 'Severe')], default="Moderate")
+    damage = models.ForeignKey(CarDefect, on_delete=models.CASCADE)
     status = models.CharField(max_length=100, choices=[('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected')])
-
     def __str__(self):
         return f"{self.policy.policy.policy_name} - {self.claim_date}"
 

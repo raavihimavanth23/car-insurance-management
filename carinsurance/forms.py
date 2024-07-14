@@ -1,5 +1,6 @@
 from django import forms
-from .models import Category, Policy, Car, CarPolicy, PremiumPolicy, Claim
+from .models import Category, Policy, Car, CarPolicy, PremiumPolicy, Claim, CarDefect
+from django.forms import inlineformset_factory
 
 # Form for the Category model
 class CategoryForm(forms.ModelForm):
@@ -18,6 +19,12 @@ class CarForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = ['car_make', 'car_model', 'car_year', 'car_number', 'vin']
+
+# Form for the Car model
+class CarDefectForm(forms.ModelForm):
+    class Meta:
+        model = CarDefect
+        fields = ['car','name','description', 'severity']
 
 # Form for the CarPolicy model
 class CarPolicyForm(forms.ModelForm):

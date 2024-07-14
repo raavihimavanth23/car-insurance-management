@@ -71,12 +71,20 @@
     {% include "common/navbar.html" %}
 
     <div class="log-form">
+        <div>{% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-danger" role="alert">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div> 
         <h2 class="text-center">LOGIN</h2><br>
         <form method="post">
             {% csrf_token %}
             {% render_field form.username class="form-control" placeholder="Username" %}
             <br>
-            {% render_field form.password class="form-control" placeholder="Password" %}
+            {% render_field form.password1 class="form-control" placeholder="Password" %}
             <br>
             <button type="submit" class="btn primary text-center">Login</button>
         </form>

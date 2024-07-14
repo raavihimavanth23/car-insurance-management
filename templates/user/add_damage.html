@@ -1,0 +1,113 @@
+{% extends 'user/user_base.html' %}
+{% block content %}
+{%load static%}
+{% load widget_tweaks %}
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+  <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+  
+  <style media="screen">
+        @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700|Open+Sans:400,300,600);
+
+        .log-form {
+    max-width: 40%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.log-form h2 {
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.log-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.log-form form .form-control {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.log-form form .form-control:focus {
+    border-color: #5cb85c;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+
+.log-form form .btn {
+    background-color: #5cb85c;
+    color: #fff;
+    font-size: 18px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.log-form form .btn:hover {
+    background-color: #4cae4c;
+}
+
+.log-form form .btn:focus {
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(92, 184, 92, 0.5);
+}
+  </style>
+  <script>
+    
+  </script>
+</head>
+<div class="log-form">
+    <div>{% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div> 
+    <h2 class="text-center">ADD NEW DAMAGE</b></h2><br>
+    
+    <form method="post" autocomplete="off" >
+        {% csrf_token %}
+        
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="car">Car</label>
+                {% render_field form.car|attr:'required:true'  class="form-control p-1" placeholder="Select Car" %}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="name">Name</label>
+                {% render_field form.name|attr:'required:true'  class="form-control" placeholder="damage name" %}
+            </div>
+            <div class="form-group col-md-4">
+                <label for="severity">Severity</label>
+                {% render_field form.severity|attr:'required:true' class="form-control" placeholder="Select severity" %}
+            </div>
+        </div>
+         <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="description">Description</label>
+                {% render_field form.description|attr:'required:true'  class="form-control" placeholder="Enter Damage Description" %}
+            </div>
+        </div>
+        <button type="submit" class="btn primary text-center">Add Car</button>
+    </form>
+</div>
+
+{% endblock content %}

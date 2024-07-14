@@ -81,13 +81,13 @@ CSRF_COOKIE_SECURE=False
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-}
-""" DATABASES = {
+} """
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME':  os.getenv('DB_NAME'),
@@ -95,6 +95,16 @@ DATABASES = {
         'PASSWORD':  os.getenv('DB_PASSWORD'),
         'HOST':  os.getenv('DB_HOST'),
         'PORT':  os.getenv('DB_PORT', default='3306'),
+    }
+}
+""" DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':  'carinsurance',
+        'USER':  'root',
+        'PASSWORD':  'root',
+        'HOST':  'localhost',
+        'PORT':  '3306',
     }
 } """
 

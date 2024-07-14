@@ -115,6 +115,14 @@
   </script>
 </head>
 <div class="log-form">
+    <div>{% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-danger" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div> 
     <h2 class="text-center">ADD NEW CAR</b></h2><br>
     <form method="post" autocomplete="off" >
         {% csrf_token %}
