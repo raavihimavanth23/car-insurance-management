@@ -99,7 +99,7 @@ if 'DB_LOCAL' in os.environ:
         'PORT':  os.getenv('DB_PORT', default='3306'),
     }
 } """
-if 'RDS_HOSTNAME' in os.environ:
+if 'DB_RDS' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -107,7 +107,18 @@ if 'RDS_HOSTNAME' in os.environ:
             'USER': os.environ['RDS_USERNAME'],
             'PASSWORD': os.environ['RDS_PASSWORD'],
             'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
+            'PORT': os.getenv('RDS_PORT', default=3306),
+        }
+    }
+if 'DB_EXTERNAL' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ['DB_NAME'],
+            'USER': os.environ['DB_USER'],
+            'PASSWORD': os.environ['DB_PASSWORD'],
+            'HOST': os.environ['DB_HOST'],
+            'PORT': os.getenv('RDS_PORT', default=3306),
         }
     }
 """ DATABASES = {
