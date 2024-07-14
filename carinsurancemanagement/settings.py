@@ -97,16 +97,16 @@ DATABASES = {
         'PORT':  os.getenv('DB_PORT', default='3306'),
     }
 }
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'carinsurance',
-        'USER':  'root',
-        'PASSWORD':  'root',
-        'HOST':  'localhost',
-        'PORT':  '3306',
-    }
-} """
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':  'carinsurance',
+#         'USER':  'root',
+#         'PASSWORD':  'root',
+#         'HOST':  'localhost',
+#         'PORT':  '3306',
+#     }
+# }
 
 
 # Password validation
