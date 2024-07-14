@@ -82,12 +82,13 @@ CSRF_COOKIE_SECURE=False
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if 'DB_LOCAL' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
 """ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -98,16 +99,27 @@ DATABASES = {
         'PORT':  os.getenv('DB_PORT', default='3306'),
     }
 } """
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME':  'carinsurance',
-#         'USER':  'root',
-#         'PASSWORD':  'root',
-#         'HOST':  'localhost',
-#         'PORT':  '3306',
-#     }
-# }
+if 'RDS_HOSTNAME' in os.environ:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
+    }
+""" DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':  'carinsurance',
+        'USER':  'root',
+        'PASSWORD':  'root',
+        'HOST':  'localhost',
+        'PORT':  '3306',
+    }
+} """
 
 
 # Password validation
@@ -157,8 +169,8 @@ MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 # AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 # AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 # AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
-AWS_ACCESS_KEY_ID='ASIATUYJP7SUEWKMZIEP'
-AWS_SECRET_ACCESS_KEY='KNgdTdYwx9kCTN+jMr6q5vSRvJ+cY81VCYrhslnP'
+AWS_ACCESS_KEY_ID='ASIATUYJP7SUNGZGS24H'
+AWS_SECRET_ACCESS_KEY='CA3/52q3h6pDdAcWsapwsgZlszUhotY5J7T6fK81'
 AWS_STORAGE_BUCKET_NAME= "x23101083-carinsurance"
 
 # Your app endpoint

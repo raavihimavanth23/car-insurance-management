@@ -20,8 +20,8 @@ from library.carinsurance_exception import CarInsuranceException
 import os
 import boto3
 session = boto3.Session(
-    # aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
-    # aws_secret_access_key = os.getenv('S3_SECRET_KEY')
+    aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key = os.getenv('S3_SECRET_KEY')
 )
 s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
 
