@@ -177,8 +177,9 @@
   <!--header area end-->
   <!--sidebar start-->
   <div class="sidebar">
-      <img src="{% static user.profile_photo.url %}" class="profile_image" alt="">
-      <h4 class="text-dark">{{request.user.first_name}}</h4>
+      <img src="{{ user.profile_photo.url }}" class="profile_image" alt="">
+      <h4 class="text-dark">{{request.user.username}}</h4>
+      <span></span>
       <!-- <h6 style="color: rgb(255, 255, 255);">( Customer )</h6> -->
     <a href="/user/user-dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
     <a href="/all-policies"><i class="fab fa-product-hunt"></i><span>All Policies</span></a>

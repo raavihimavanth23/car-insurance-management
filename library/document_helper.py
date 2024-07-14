@@ -1,4 +1,4 @@
-from exception.document_exception import DocumentException
+from .exception.document_exception import DocumentException
 class DocumentHelper():
     def upload(file, name, s3):
         if file is None:
@@ -7,11 +7,12 @@ class DocumentHelper():
             raise DocumentException("Username is required")
         if s3 is None:
             raise DocumentException("S3 object is required")
-        filename = name+"_picture.jpg"
+        filename = name.username+"_picture.jpg"
         image_data = file
         try:
-            object = s3.Object('bucket sauce', filename)
-            object.put(ACL='public-read',Body=image_data,Key=filename)
-            return True
+            object = s3.Object('x23101083-carinsurance', filename)
+            val = object.put(ACL='public-read',Body=image_data,Key=filename)
+            print('response from document upload: ', val)
+            return filename
         except Exception as e:
             raise DocumentException("Error uploading image to s3")

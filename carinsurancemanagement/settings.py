@@ -18,7 +18,7 @@ add_type("text/html", ".html", True)
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
-MEDIA_ROOT=os.path.join(BASE_DIR,'static')
+# MEDIA_ROOT=os.path.join(BASE_DIR,'static')
 STATIC_DIR=os.path.join(BASE_DIR,'static')
 
 # Quick-start development settings - unsuitable for production
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'user',
     'widget_tweaks',
     'carinsurance',
+     'storages',
 ]
 
 MIDDLEWARE = [
@@ -97,16 +98,16 @@ DATABASES = {
         'PORT':  os.getenv('DB_PORT', default='3306'),
     }
 } """
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'carinsurance',
-        'USER':  'root',
-        'PASSWORD':  'root',
-        'HOST':  'localhost',
-        'PORT':  '3306',
-    }
-} """
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME':  'carinsurance',
+#         'USER':  'root',
+#         'PASSWORD':  'root',
+#         'HOST':  'localhost',
+#         'PORT':  '3306',
+#     }
+# }
 
 
 # Password validation
@@ -141,7 +142,28 @@ USE_L10N = True
 
 USE_TZ = True
 
+# # AWS S3 Configuration
+AWS_ACCESS_KEY_ID = 'ASIATUYJP7SUEWKMZIEP'
+AWS_SECRET_ACCESS_KEY = 'KNgdTdYwx9kCTN+jMr6q5vSRvJ+cY81VCYrhslnP'
+AWS_STORAGE_BUCKET_NAME = 'x23101083-carinsurance'
+AWS_S3_REGION_NAME = 'eu-west-1'  # e.g., 'us-west-1'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
+# S3 static and media settings
+AWS_LOCATION = 'media'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+# AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+# AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+# AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+AWS_ACCESS_KEY_ID='ASIATUYJP7SUEWKMZIEP'
+AWS_SECRET_ACCESS_KEY='KNgdTdYwx9kCTN+jMr6q5vSRvJ+cY81VCYrhslnP'
+AWS_STORAGE_BUCKET_NAME= "x23101083-carinsurance"
+
+# Your app endpoint
+# AWS_S3_ENDPOINT_URL = os.environ.get('AWS_S3_ENDPOINT_URL')
+# AWS_S3_ENDPOINT_URL ="https://eu-west-1.console.aws.amazon.com/s3/buckets/"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 

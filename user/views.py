@@ -14,14 +14,16 @@ from carinsurance import models as INS_MODAL
 from carinsurance import forms as INS_FORM
 from library.insurance_calculator import calculate_max_assurance
 import library.validate as validate
+from library.document_helper import DocumentHelper,DocumentException
 from library import date_util as du
 from library.carinsurance_exception import CarInsuranceException
 import os
 import boto3
 session = boto3.Session(
-    aws_access_key_id= os.getenv('S3_ACCESS_KEY'),
-    aws_secret_access_key = os.getenv('S3_SECRET_KEY')
+    # aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
+    # aws_secret_access_key = os.getenv('S3_SECRET_KEY')
 )
+s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
 
 def login_view(request):
     form = forms.UserForm()
@@ -49,12 +51,15 @@ def user_signup_view(request):
         # print('userForm: ',userForm, 'customerForm: ', customerForm)
         try:
             if userForm.is_valid() and customerForm.is_valid():
-                user = userForm.save()
+                user = userForm.save(commit= False)
                 print('saved user: ', user)
                 customer =  customerForm.save(commit=False)
                 customer.user = user
                 profile_photo  = request.FILES["profile_photo"]
                 # print('profile_pic: ', profile_photo)
+                # filename = DocumentHelper.upload(profile_photo, user,s3 = boto3.resource('s3'))
+                # customer.profile_photo.url = s3_storage_url+filename
+                user.save()
                 customer.save()
                 print('saved customer: ', customer)
                 customer_group = Group.objects.get_or_create(name='CUSTOMER')
