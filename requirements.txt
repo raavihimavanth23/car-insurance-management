@@ -13,7 +13,7 @@ lazy-object-proxy==1.7.1
 mccabe==0.7.0
 mixer==7.0.6
 # mysqlclient
-# MySQL-python==1.2.5
+MySQL-python
 mysqlclient==2.0.3
 packaging==21.3
 Pillow==8.4.0
