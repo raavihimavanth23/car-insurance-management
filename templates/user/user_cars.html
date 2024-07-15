@@ -1,70 +1,85 @@
 {% extends 'user/user_base.html' %}
 {% block content %}
-{%load static%}
+{% load static %}
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
+  <style>
+    .card {
+        margin-bottom: 20px;
     }
-
-    h6 {
-      text-align: center;
+    .card-header {
+        /* background-color: #5bc0de; */
+        color: black;
     }
-
-    .row {
-      margin: 100px;
+    .car-image {
+        max-width: 100px;
+        margin-right: 20px;
     }
-  </style>
+    .card-body ul {
+        padding-left: 0;
+        list-style: none;
+    }
+    .card-body ul li {
+        margin-bottom: 10px;
+    }
+    .summary-section {
+        background-color: #f0f0f0;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+    .summary-section h2 {
+        margin-bottom: 15px;
+    }
+    .btn-add-car {
+        background-color: #337ab7;
+        color: white;
+        width: 160px;
+        padding: 10px 20px;
+        border-radius: 2px;
+        height: 48px;
+        margin-bottom: 20px;
+    }
+    .btn-add-car:hover {  
+      background-color: #426889;
+      color:white;
+      box-shadow: 2px 4px 2px 4px solid #337ab7;
+    }
+</style>
 </head>
 <br><br>
 <div class="container">
-  <div class="float-end m-1" style="font-family: 'Times New Roman', Times, serif;margin-right: 10px;">
-  <a class="btn btn-info  btn-md" href="{% url 'add_car'  %}" data-toggle="tooltip" data-placement="bottom" title="add new car" ><span class="glyphicon glyphicon-plus"> Add new car</span></a>
-  </div>
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Cars</h6>
+  <div class="summary-section">
+    <h2>Your Car Collection</h2>
+    <p>We manage a diverse collection of cars, each with unique features and insurance policies. You can add new cars and apply policies here.</p>
+    <a class="btn btn-add-car" href="{% url 'add_car'  %}"><i class="fas fa-plus"></i> Add new car</a>
+</div>
+  {% for car in user_cars %}
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header alert alert-primary">
+            <h5 class="display-6">{{ car.car_make }}</h5>
+        </div>
+        <div class="card-body d-flex">
+            <img src='https://cdn.pixabay.com/photo/2021/08/20/15/22/honda-civic-si-6560708_1280.jpg' alt="Car Image" class="car-image" >
+            <div>
+                <ul>
+                    <li><strong>Model:</strong> {{ car.car_model }}</li>
+                    <li><strong>Year:</strong> {{ car.car_year }}</li>
+                    <li><strong>Car Number:</strong> {{ car.car_number }}</li>
+                    <li class="d-flex flex-col row-cols-1 align-items-center justify-content-between"><span><strong>VIN:</strong> {{ car.vin }}</span>
+                       <a class=" text-primary" href="{% url 'add_policy' car.id  %}"> Add Policy <i class="fas fa-arrow-right"></i></a></li>
+                </ul>
+               
+            </div>
+        </div>
     </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-        <th>Serial No.</th>
-          <th>Car Name</th>
-          <th>Car Modal</th>
-          <th>Year</th>
-          <th>Car Number</th>
-          <th>Vehicle Identification Number</th>
-          <th>Policy</th>
-        </tr>
-      </thead>
-      {% for car in user_cars %}
-      <tr>
-        <td> {{ forloop.counter }}</td>
-        <td> {{car.car_make}}</td>
-        <td> {{car.car_model}}</td>
-        <td> {{car.car_year}}</td>
-        <td> {{car.car_number}}</td>
-        <td> {{car.vin}}</td>
-        <td>{% if car.car_policy %} 
-              {% for cp in car.car_policy %}
-                {% if cp.is_active %}    
-                  <span class="text-success">{{cp.policy}}</span>
-                {% else %}
-                <span class="text-danger">{{cp.policy}}</span>
-                {% endif %}
-              {% endfor %}
-            {% else %} 
-            <a class="btn btn-primary btn-xs" href="{% url 'add_policy' car.id  %}" data-toggle="tooltip" data-placement="bottom" title="add policy" ><span class="glyphicon glyphicon-plus"></span>Add Policy</a>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+</div>
+{% endfor %}
+
 </div>
 {% endblock content %}

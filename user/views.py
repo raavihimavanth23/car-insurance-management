@@ -21,7 +21,7 @@ import os
 import boto3
 session = boto3.Session(
     aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key = os.getenv('S3_SECRET_KEY')
+    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY=')
 )
 s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
 
@@ -57,7 +57,7 @@ def user_signup_view(request):
                 customer.user = user
                 profile_photo  = request.FILES["profile_photo"]
                 # print('profile_pic: ', profile_photo)
-                # filename = DocumentHelper.upload(profile_photo, user,s3 = boto3.resource('s3'))
+                filename = DocumentHelper.upload(profile_photo, user,s3 = boto3.resource('s3'))
                 # customer.profile_photo.url = s3_storage_url+filename
                 customer.save()
                 print('saved customer: ', customer)

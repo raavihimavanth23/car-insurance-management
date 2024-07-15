@@ -7,56 +7,84 @@
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
+  <style>
+    .policy-card {
+        margin-bottom: 20px;
+        box-shadow: 2px 4px 2px 4px #f7f7f7;
+        border:none;
     }
-
-    h6 {
-      text-align: center;
+    .policy-card:hover {
+      border: 2px solid #eee;
     }
-
-    .row {
-      margin: 100px;
+    .policy-header {
+        color: black;
+        padding: 10px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
     }
-  </style>
+    .policy-body {
+        padding: 20px;
+    }
+    .policy-footer {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+    .policy-detail {
+      height: 28px;
+      padding: 8px;
+      background-color: #f7f7f7;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .summary-section {
+            background-color: #f7f7f6;
+            padding: 30px 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .summary-section h2 {
+            margin-bottom: 15px;
+        }
+</style>
 </head>
-<br><br>
 <div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Policies</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-        <th>Serial No.</th>
-          <th>Policy Name</th>
-          <th> Category</th>
-          <th>Min Assurance</th>
-          <th>Base Assurance</th>
-          <th>Max Assurance</th>
-          <th>Premium</th>
-          <th>Tenure</th>
-          <th>Creation Date</th>
-        </tr>
-      </thead>
+  <div class="summary-section">
+    <h2>Our Insurance Policies</h2>
+    <p>We offer a range of insurance policies to meet your needs. Whether you're looking for comprehensive coverage, third-party liability, or collision coverage, we've got you covered. Our policies are designed to provide maximum assurance with competitive premiums. Explore our policies below to find the perfect fit for you.</p>
+</div>
+  <div class="row">
       {% for policy in policies %}
-      <tr>
-        <td> {{ forloop.counter }}</td>
-        <td> {{policy.policy_name}}</td>
-        <td> {{policy.category}}</td>
-        <td> {{policy.min_assurance}}</td>
-        <td> {{policy.base_assurance}}</td>
-        <td> {{policy.max_assurance}}</td>
-        <td> {{policy.premium}}</td>
-        <td> {{policy.tenure}}</td>
-        <td>{{policy.creation_date}}</td>
-      </tr>
+      <div class="col-md-4">
+          <div class="card policy-card">
+              <div class="policy-header alert alert-primary">
+                  <h5 class="display-6">{{ policy.policy_name }}</h5>
+              </div>
+              <div class="policy-body">
+                <ul class="list-unstyled padding-20">
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Category:</strong></span><span> {{ policy.category }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Min Assurance:</strong></span><span> {{ policy.min_assurance }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Base Assurance:</strong> </span><span>{{ policy.base_assurance }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Max Assurance:</strong></span><span> {{ policy.max_assurance }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Premium:</strong></span><span> {{ policy.premium }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Tenure:</strong></span> <span> {{ policy.tenure }} years</span></li>
+                </ul>
+                <h6 class="text-muted">Details:
+                </h6>
+                <span>
+                    {{policy.details}}
+                </span>
+            </div>
+              <div class="policy-footer">
+                  <small class="text-muted">Created on: {{ policy.creation_date }}</small>
+              </div>
+          </div>
+      </div>
       {% endfor %}
-    </table>
   </div>
 </div>
+<br><br>
 
 <br><br><br><br><br><br>
 {% endblock content %}
