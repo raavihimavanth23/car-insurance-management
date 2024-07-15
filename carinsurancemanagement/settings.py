@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'user',
     'widget_tweaks',
     'carinsurance',
-     'storages',
+    #  'storages',
 ]
 
 MIDDLEWARE = [
@@ -118,7 +118,7 @@ if 'DB_EXTERNAL' in os.environ:
             'USER': os.environ['DB_USER'],
             'PASSWORD': os.environ['DB_PASSWORD'],
             'HOST': os.environ['DB_HOST'],
-            'PORT': os.getenv('RDS_PORT', default=3306),
+            'PORT': os.getenv('DB_PORT', default=3306),
         }
     }
 """ DATABASES = {

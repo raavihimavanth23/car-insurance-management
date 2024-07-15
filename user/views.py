@@ -51,7 +51,7 @@ def user_signup_view(request):
         # print('userForm: ',userForm, 'customerForm: ', customerForm)
         try:
             if userForm.is_valid() and customerForm.is_valid():
-                user = userForm.save(commit= False)
+                user = userForm.save()
                 print('saved user: ', user)
                 customer =  customerForm.save(commit=False)
                 customer.user = user
@@ -59,7 +59,6 @@ def user_signup_view(request):
                 # print('profile_pic: ', profile_photo)
                 # filename = DocumentHelper.upload(profile_photo, user,s3 = boto3.resource('s3'))
                 # customer.profile_photo.url = s3_storage_url+filename
-                user.save()
                 customer.save()
                 print('saved customer: ', customer)
                 customer_group = Group.objects.get_or_create(name='CUSTOMER')
