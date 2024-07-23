@@ -166,7 +166,8 @@ def apply_policy_view(request, pk):
                 car_policy = car_policy_form.save(commit =False)
                 car_policy.car = car
                 policy = car_policy.policy
-                existing_policy =INS_MODAL.CarPolicy.objects.filter(policy =policy)
+                existing_policy =INS_MODAL.CarPolicy.objects.filter(policy =policy, car=car)
+                print('existing policy:', existing_policy)
                 if existing_policy.count() >0:
                     raise CarInsuranceException("This policy is already applied to this car")
                 if policy:
@@ -243,8 +244,10 @@ def claim_assurance_view(request, pk):
                 print('claim_form: :: ', claim_form)
                 claim = claim_form.save(commit=False)
                 claim.policy = car_policy
-                claim.claim_date = datetime.now().date()
+                claim.claim_date = date_util.today()
                 claim.status = "Pending"
+                if car_policy.car != claim.damage.car:
+                    raise CarInsuranceException("This policy is not applicable for the damage car.")
                 validate.check_claim(claim)
                 print('claim damage: ', claim.damage)
                 claim.save()

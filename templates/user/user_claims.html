@@ -23,52 +23,42 @@
 </head>
 <br><br>
 <div class="container">
-  <div class="panel panel-primary">
+  <div class="panel panel-light bg-light">
     <div class="panel-heading">
-      <h6 class="panel-title">Claims</h6>
+      <h6 class="display-4">Claims</h6>
     </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-        <th>Serial No.</th>
-          <th>CarPolicy</th>
-          <th>Claim Date</th>
-          <th>Amount</th>
-          <th>Description</th>
-          <th>Status</th>
-          <th>Damage</th>
-        </tr>
-      </thead>
+
+    <ol class="list-group list-group-numbered">
       {% for claim in user_claims %}
-      <tr>
-        <td> {{ forloop.counter }}</td>
-        <td> {{claim.policy}}</td>
-        <td> {{claim.claim_date}}</td>
-        <td> {{claim.amount}}</td>
-        <td> {{claim.description}}</td>
-        <td> {% if claim.status == "Approved" %}
-            <span class="badge badge-success bg-success">Approved</span>
-        {% elif claim.status == "Pending" %}
-            <span class="badge badge-secondary bg-secondary">Pending</span>
-        {% elif claim.status == "Rejected" %}
-            <span class="badge badge-danger bg-danger">Rejected</span>
-        {% else %}
-            <span class="badge badge-warning bg-warning">Unknown Status</span>
-        {% endif %}
-        </td>
-        <td> {% if claim.damage == "Low" %}
-          <span class="badge badge-success bg-info">Low</span>
-      {% elif claim.damage == "Moderate" %}
-          <span class="badge badge-warning bg-warning">Moderate</span>
-      {% elif claim.damage == "Severe" %}
-          <span class="badge badge-danger bg-danger">Severe</span>
-      {% else %}
-          <span class="badge badge-secondary bg-secondary">{{claim.damage}}</span>
-      {% endif %}
-      </td>
-      </tr>
+      <li class="list-group-item d-flex shadow-sm p-3 justify-content-between align-items-start mb-5">
+        <div class="ms-2 me-auto">
+          <div class="fw-bold">{{claim.policy}}</div>
+            <p>Claim Date: {{claim.claim_date}}</p>
+            <p>Claim Amount: {{claim.amount}}</p>
+            <p>Description: {{claim.description}}</p>
+            <p>Damage: {% if claim.damage.severity == "Low" %}
+              <span class="text-info">{{claim.damage}}</span>
+          {% elif claim.damage.severity == "Moderate" %}
+              <span class="text-warning">{{claim.damage}}</span>
+          {% elif claim.damage.severity == "Severe" %}
+              <span class="text-danger ">{{claim.damage}}</span>
+          {% else %}
+              <span class="text-secondary ">{{claim.damage}}</span>
+          {% endif %}</p>
+        </div>
+        {% if claim.status == "Pending" %}
+        <span class="badge badge-primary text-bg-primary">Pending</span>
+    {% elif claim.status == "Approved" %}
+        <span class="badge badge-success text-bg-success">Approved</span>
+    {% elif claim.status == "Rejected" %}
+        <span class="badge badge-danger text-bg-danger">Rejected</span>
+    {% else %}
+        <span class="badge badge-secondary">{{claim.status}}</span>
+    {% endif %}
+      </li>
+      
       {% endfor %}
-    </table>
+    </ol>
   </div>
 </div>
 {% endblock content %}
