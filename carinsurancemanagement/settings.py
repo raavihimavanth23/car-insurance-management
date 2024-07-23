@@ -31,8 +31,6 @@ SECRET_KEY = '$h*1($+_*s!qw(rex@^62_yiuwcp%jqcego+5-yke%m$gq9tb_'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -82,13 +80,13 @@ CSRF_COOKIE_SECURE=False
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-if 'DB_LOCAL' in os.environ:
+""" if 'DB_LOCAL' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
-    }
+    } """
 """ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -99,6 +97,7 @@ if 'DB_LOCAL' in os.environ:
         'PORT':  os.getenv('DB_PORT', default='3306'),
     }
 } """
+
 if 'DB_RDS' in os.environ:
     DATABASES = {
         'default': {
@@ -166,7 +165,7 @@ USE_L10N = True
 USE_TZ = True
 
 # # AWS S3 Configuration
-AWS_STORAGE_BUCKET_NAME= "x23101083-carinsurance"
+AWS_STORAGE_BUCKET_NAME= os.environ['AWS_STORAGE_BUCKET_NAME']
 AWS_S3_REGION_NAME = 'us-east-1'
 AWS_DEFAULT_REGION='us-east-1'
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'

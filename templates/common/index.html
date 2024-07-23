@@ -4,23 +4,79 @@
 
 <style>
 .carousel-item img {
-        width: 100%;
+        width: 80%;
         height: auto;
         object-fit: cover; /* Ensure the entire image fits within the container */
     }
     .carousel-inner {
-        width: 100%;
+        width: 80%;
         max-height: 40rem; /* Adjust the max height as needed */
     }
     .body {
       background-color: #202020;
     }
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.header,
+footer {
+    background-color: #003366;
+    color: white;
+}
+
+.intro {
+    padding: 2em 0;
+}
+
+.intro h2 {
+    color: #007acc;
+}
+
+.card-deck .card {
+    min-width: 15rem;
+}
+
+.card-title {
+    color: #007acc;
+}
+
+.list-group-item {
+    border: none;
+    padding: 1.5em;
+}
+
+.list-group-item h5 {
+    color: #007
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+header, footer {
+    background-color: #003366;
+    color: white;
+}
+
+header .btn {
+    margin-left: 10px;
+}
+
+.intro {
+    padding: 2em 0;
+}
+
+.intro h2 {
+    color: #007
+}
 </style>
 <body >
   {% include "common/navbar.html" %}
 
-
-<div id="carouselExampleInterval" class="carousel slide " style="height:80%" data-ride="carousel">
+<!-- 
+<div id="carouselExampleInterval" class="carousel slide " style="height:30%" data-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active" data-interval="10000">
       <img src='{% static "images/home_image2.jpg" %}' class="d-block w-100"   alt="...">
@@ -40,7 +96,83 @@
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="sr-only">Next</span>
   </a>
+</div> -->
+<div class="container mt-5">
+  <section class="intro text-center mb-5">
+      <h4 class="text-muted">Comprehensive Coverage for Your Peace of Mind</h4>
+      <p>At SecureCar Insurance, we understand that your vehicle is not just a mode of transportation but an essential part of your daily life. That's why we offer a range of car insurance policies designed to provide you with the protection and peace of mind you deserve.</p>
+  </section>
 </div>
+
+<!-- <section class="why-choose mb-5">
+  <h4 class="text-center mb-4 text-muted">Why Choose SecureCar Insurance?</h4>
+  <div class="card-deck">
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Tailored Policies</h5>
+              <p class="card-text">Whether you're a new driver, a seasoned professional, or someone with unique insurance needs, we have a policy that's right for you.</p>
+          </div>
+      </div>
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Competitive Premiums</h5>
+              <p class="card-text">We offer some of the most competitive premiums in the industry. Our flexible payment plans ensure that you get the coverage you need at a price you can afford.</p>
+          </div>
+      </div>
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Easy Claims Process</h5>
+              <p class="card-text">Our hassle-free claims process ensures that you get back on the road quickly after an accident. With 24/7 customer support and a network of trusted repair shops, we're here for you when you need us most.</p>
+          </div>
+      </div>
+      <div class="card">
+          <div class="card-body">
+              <h5 class="card-title">Discounts and Benefits</h5>
+              <p class="card-text">Take advantage of our various discounts, including safe driver discounts, multi-policy discounts, and more. Enjoy additional benefits like free roadside assistance and rental car coverage.</p>
+          </div>
+      </div>
+  </div>
+</section> -->
+<section class="coverage-options mb-5 w-50" style="height: 500px;margin-left: 25%;margin-right: 25%;">
+  <h4 class="text-center mb-4 text-muted">Our Coverage Options</h4>
+  <div id="coverageCarousel" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+          <div class="carousel-item active">
+              <div class="card shadow-sm p-3 border-1 alert alert-info">
+                  <div class="card-body">
+                      <h5 class="card-title">Comprehensive Coverage</h5>
+                      <p class="card-text">Our most extensive policy covers damage to your vehicle, theft, fire, vandalism, and third-party liability. It also includes coverage for personal belongings, windscreen damage, and more.</p>
+                  </div>
+              </div>
+          </div>
+          <div class="carousel-item">
+              <div class="card shadow-sm p-3 border-1 alert alert-success">
+                  <div class="card-body">
+                      <h5 class="card-title">Third-Party Fire and Theft</h5>
+                      <p class="card-text">This policy provides coverage for damage to other people's vehicles and property, plus protection against theft and fire damage to your vehicle.</p>
+                  </div>
+              </div>
+          </div>
+          <div class="carousel-item">
+              <div class="card shadow-sm p-3 border-1 alert alert-warning">
+                  <div class="card-body">
+                      <h5 class="card-title">Third-Party Only</h5>
+                      <p class="card-text">Our basic policy covers damage to other people's vehicles and property, ensuring you meet the minimum legal requirements for car insurance.</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <a class="carousel-control-prev" href="#coverageCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#coverageCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+      </a>
+  </div>
+</section>
+
   {% include "common/footer.html" %}
 
 

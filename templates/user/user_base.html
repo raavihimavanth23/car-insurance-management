@@ -57,7 +57,7 @@
     }
 
     .sidebar {
-      background: #d7e2e3;
+      background: #f3f3f3;
       /* margin-top: 70px; */
       padding-top: 30px;
       position: fixed;
@@ -66,7 +66,7 @@
       height: 100%;
       transition: 0.5s;
       transition-property: left;
-      color: #22242A;
+      /* color: #f3f3f3; */
     }
 
     .sidebar .profile_image {
@@ -74,17 +74,16 @@
       height: 100px;
       border-radius: 100px;
       margin-bottom: 10px;
-      margin-left: 50px;
+      margin-left: 40px;
     }
 
     .sidebar h4 {
-      color: #22242A;
+      /* color: #22242A; */
       margin-top: 0;
       
     }
 
     .sidebar a {
-      color: #22242A;
       display: block;
       width: 100%;
       line-height: 60px;
@@ -96,12 +95,13 @@
     }
 
     .sidebar a:hover {
-      background: #5cb85c;
+      background: #e1dddd
+      /* border: 1px solid #22242A; */
     }
 
-    .sidebar i {
+    /* .sidebar i {
       padding-right: 10px;
-    }
+    } */
 
     label #sidebar_btn {
       z-index: 1;
@@ -160,28 +160,28 @@
 <body style="overflow: hidden;">
 
   <!--header area start-->
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #5cb85c;">
-    <a class="navbar-brand" href="#">Car Insurance</a>
+  <nav class="navbar navbar-expand-lg navbar-light alert alert-primary">
+    <a class="navbar-brand" href="/user/user-dashboard"><h4 class=" text-primary">SecureCar Insurance</h4></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+        <!-- <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a> -->
       </div>
     </div>
-    <span class="navbar-text" style="margin-right: 30px;color:white">
-        <a class="nav-item nav-link mr-3 text-white"  href="/logout">Logout</a>
+    <span class="navbar-text " style="margin-right: 30px">
+        <a class="nav-item nav-link mr-3 text-danger"  href="/logout">Logout</a>
       </span>
   </nav>
   <!--header area end-->
   <!--sidebar start-->
-  <div class="sidebar">
+  <div class="sidebar text-muted">
       <img src="{{ user.profile_photo.url }}" class="profile_image" alt="">
-      <h4 class="text-dark">{{request.user.username}}</h4>
+      <h4 class="text-primary text-center">{{request.user.username}}</h4>
       <span></span>
       <!-- <h6 style="color: rgb(255, 255, 255);">( Customer )</h6> -->
-    <a href="/user/user-dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+    <a href="/user/user-dashboard"><i class="fas fa-tachometer-alt"></i><span class="text-muted">Dashboard</span></a>
     <a href="/all-policies"><i class="fab fa-product-hunt"></i><span>All Policies</span></a>
     <a href="/user/user-policies"><i class="fab fa-product-hunt"></i><span>Your Car Policies</span></a>
     <a href="/user/user-cars"><i class="fa fa-car"></i><span>Registered Cars</span></a>

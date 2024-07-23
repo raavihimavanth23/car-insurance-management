@@ -19,12 +19,22 @@ from library import date_util as du
 from library.carinsurance_exception import CarInsuranceException
 import os
 import boto3
-session = boto3.Session(
-    aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY=')
-)
-s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
+# session = boto3.Session(
+#     aws_access_key_id= os.getenv('AWS_ACCESS_KEY_ID'),
+#     aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY=')
+# )
+# s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
+import boto3
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
+session = boto3.Session()
+credentials = session.get_credentials()
+
+
+# Log the access key id being used
+logging.info(f'AWS Access Key: {credentials.access_key}')
+logging.info(f'AWS Secret Key: {credentials.secret_key}')
 def login_view(request):
     form = forms.UserForm()
     data = {'form':form}
