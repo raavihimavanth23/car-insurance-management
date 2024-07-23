@@ -1,64 +1,93 @@
 {% extends 'user/user_base.html' %}
 {% block content %}
-{%load static%}
+{% load static %}
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
+  <style>
+    .card {
+        margin-bottom: 20px;
     }
-
-    h6 {
-      text-align: center;
+    .card-header {
+        /* background-color: #5bc0de; */
+        color: black;
     }
-
-    .row {
-      margin: 100px;
+    .car-image {
+        max-width: 100px;
+        margin-right: 20px;
     }
-  </style>
+    .card-body ul {
+        padding-left: 0;
+        list-style: none;
+    }
+    .card-body ul li {
+        margin-bottom: 10px;
+    }
+    .summary-section {
+        background-color: #f0f0f0;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+    }
+    .summary-section h2 {
+        margin-bottom: 15px;
+    }
+    .btn-add-car {
+        background-color: #337ab7;
+        color: white;
+        width: 160px;
+        padding: 10px 20px;
+        border-radius: 2px;
+        height: 48px;
+        margin-bottom: 20px;
+    }
+    .btn-add-car:hover {  
+      background-color: #426889;
+      color:white;
+      box-shadow: 2px 4px 2px 4px solid #337ab7;
+    }
+</style>
 </head>
 <br><br>
 <div class="container">
-  <div class="float-end m-1" style="font-family: 'Times New Roman', Times, serif;margin-right: 10px;">
-  <a class="btn btn-info  btn-md" href="{% url 'add_damage'  %}" data-toggle="tooltip" data-placement="bottom" title="add damage" ><span class="glyphicon glyphicon-plus"> Add Car Damage</span></a>
-  </div>
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Cars Damages</h6>
+  <div class="summary-section">
+    <h2>Your Car Damages</h2>
+    <p>Manage your car damages here. You can view existing car damages and add new car damages</p>
+    <a class="btn btn-add-car" href="{% url 'add_damage'  %}"><i class="fas fa-plus"></i> Add new damage</a>
+</div>
+{% for car_defect in car_damages %}
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header alert alert-primary">
+            <h5 class="display-6">{{ car_defect.name }}</h5>
+        </div>
+        <div class="card-body d-flex">
+            <!-- <img src='https://cdn.pixabay.com/photo/2021/08/20/15/22/honda-civic-si-6560708_1280.jpg' alt="Car Image" class="car-image" > -->
+            <div>
+                <ul>
+                    <li><strong>Car</strong> {{ car_defect.car }}</li>
+                    <li><strong>Severity</strong> {% if car_defect.severity == "Low" %}
+                      <span class="badge badge-success bg-info">Low</span>
+                  {% elif car_defect.severity == "Moderate" %}
+                      <span class="badge badge-warning bg-warning">Moderate</span>
+                  {% elif car_defect.severity == "Severe" %}
+                      <span class="badge badge-danger bg-danger">Severe</span>
+                  {% else %}
+                      <span class="badge badge-secondary bg-secondary">{{car_defect.severity}}</span>
+                  {% endif %}</li></ul>
+                  <h6 class="text-muted">Details:
+                  </h6>
+                  <span>
+                      {{car_defect.description}}
+                  </span>
+            </div>
+        </div>
     </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-        <th>Serial No.</th>
-          <th>Damage</th>
-          <th>Car</th>
-          <th>Severity</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      {% for car_defect in car_damages %}
-      <tr>
-        <td> {{ forloop.counter }}</td>
-        <td>{{car_defect.name}}</td>
-        <td> {{car_defect.car}}</td>
-        <td> {% if car_defect.severity == "Low" %}
-            <span class="badge badge-success bg-info">Low</span>
-        {% elif car_defect.severity == "Moderate" %}
-            <span class="badge badge-warning bg-warning">Moderate</span>
-        {% elif car_defect.severity == "Severe" %}
-            <span class="badge badge-danger bg-danger">Severe</span>
-        {% else %}
-            <span class="badge badge-secondary bg-secondary">{{car_defect.severity}}</span>
-        {% endif %}
-        </td>
-        <td> {{car_defect.description}}</td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+</div>
+{% endfor %}
+<div class="mb-5"></div>
 </div>
 {% endblock content %}

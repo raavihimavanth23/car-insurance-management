@@ -15,7 +15,8 @@ from carinsurance import forms as INS_FORM
 from library.insurance_calculator import calculate_max_assurance
 import library.validate as validate
 from library.document_helper import DocumentHelper,DocumentException
-from library import date_util as du
+from library import date_util 
+from datetime import datetime, timedelta
 from library.carinsurance_exception import CarInsuranceException
 import os
 import boto3
@@ -130,8 +131,8 @@ def renew_policy_view(request, pk):
         policy = car_policy.policy
         if policy:
             tenure_years = policy.tenure
-            start_date = du.datetime.date
-            end_date = du.date_plus(start_date, tenure_years*365)
+            start_date = date_util.datetime.date
+            end_date = date_util.date_plus(start_date, tenure_years*365)
             car_policy.start_date = start_date
             car_policy.end_date = end_date 
             car_policy.is_active=True
@@ -150,7 +151,7 @@ def user_cars(request):
     for car in user_cars:
         car_policy = INS_MODAL.CarPolicy.objects.filter(car=car)
         print('car: ', car, 'policy: ', car_policy)
-        car.car_policy = car_policy
+        # car.is_policy_exist = 'yes' if car_policy.count() > 0 else 'no' 
     data = {'user_cars': user_cars, 'user':get_customer_details(request.user)}
     return render(request, 'user/user_cars.html', data)
 
@@ -158,25 +159,33 @@ def apply_policy_view(request, pk):
     car_policy_form = INS_FORM.CarPolicyForm()
     car = INS_MODAL.Car.objects.get(id=pk)
     if(request.method=='POST'):
-         car_policy_form = INS_FORM.CarPolicyForm(request.POST)
+        car_policy_form = INS_FORM.CarPolicyForm(request.POST)
         #  print('car_policy_form', car_policy_form)
-         if car_policy_form.is_valid:
-            car_policy = car_policy_form.save(commit =False)
-            car_policy.car = car
-            policy = car_policy.policy
-            if policy:
-                tenure_years = policy.tenure
-                start_date = datetime.now().date()
-                sum_assurance = calculate_max_assurance(car, policy, [])
-                end_date = start_date + timedelta(days=tenure_years*365)
-                car_policy.start_date = start_date
-                car_policy.end_date = end_date 
-                car_policy.amount_claimed = 0
-                car_policy.sum_assurance = sum_assurance
-                validate.check_apply_policy(car_policy)
-                car_policy.save()
-                print('car_policy: ', car_policy)
-            return HttpResponseRedirect('/user/user-policies')
+        try:
+            if car_policy_form.is_valid:
+                car_policy = car_policy_form.save(commit =False)
+                car_policy.car = car
+                policy = car_policy.policy
+                existing_policy =INS_MODAL.CarPolicy.objects.filter(policy =policy)
+                if existing_policy.count() >0:
+                    raise CarInsuranceException("This policy is already applied to this car")
+                if policy:
+                    tenure_years = policy.tenure
+                    start_date = date_util.today()
+                    sum_assurance = calculate_max_assurance(car, policy, [])
+                    end_date = start_date + timedelta(days=365*tenure_years)
+                    car_policy.start_date = start_date
+                    car_policy.end_date = end_date 
+                    car_policy.amount_claimed = 0
+                    car_policy.sum_assurance = sum_assurance
+                    validate.check_apply_policy(car_policy)
+                    car_policy.save()
+                    print('car_policy: ', car_policy)
+                return HttpResponseRedirect('/user/user-policies')
+        except CarInsuranceException as e:
+            messages.error(request, str(e))
+        except Exception as e:
+            messages(request, 'Unable to apply policy')
     data = {'form': car_policy_form, 'user':get_customer_details(request.user), 'selected_car':car}
     return render(request, 'user/add_policy.html', data)
 
@@ -188,7 +197,7 @@ def calculate_car_assurance(request, pk):
     print('car details: ', car.car_model, 'car_policy: ', car_policy)
     previous_claims = []
     for cp in car_policy:
-        previous_claims.append(INS_MODAL.Claim.objects.filter(policy = cp))
+        previous_claims.extend(INS_MODAL.Claim.objects.filter(policy = cp))
     print('previous claims: ', previous_claims)
     car_assurance = calculate_max_assurance(car, policy, previous_claims)
     data = {

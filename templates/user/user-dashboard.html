@@ -21,7 +21,7 @@
         color: rgb(255, 255, 255);
       }
   
-      .bg-c-blue {
+      /* .bg-c-blue {
         background: #04868f;
       }
   
@@ -36,14 +36,15 @@
       .bg-c-pink {
         background: #663a30;
       }
-  
+   */
   
       .card {
         
         -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
         box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-        border: 1px solid #4C51BF;
+        /* border: 1px solid #4C51BF; */
         box-shadow: 5px 5px solid #EEE;
+        color:black;
         margin-bottom: 30px;
         -webkit-transition: all 0.3s ease-in-out;
         transition: all 0.3s ease-in-out;
@@ -75,7 +76,7 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 col-xl-3">
-        <div class="card bg-c-green order-card">
+        <div class="card bg-c-pink order-card alert alert-primary">
           <div class="card-block">
             <h6 class="m-b-20"> Total Policy </h6>
             <h2 class="text-right"><i  class="fab fa-product-hunt f-left"></i><span>{{total_policies}}</span></h2>
@@ -84,7 +85,7 @@
       </div>
   
       <div class="col-md-4 col-xl-3">
-        <div class="card bg-c-green order-card">
+        <div class="card bg-c-green order-card alert alert-info">
           <div class="card-block">
             <h6 class="m-b-20">CarPolicy Applied </h6>
             <h2 class="text-right"><i class="fab fa-product-hunt f-left"></i><span>{{user_policies}}</span></h2>
@@ -93,7 +94,7 @@
       </div>
   
       <div class="col-md-4 col-xl-3">
-        <div class="card bg-c-green order-card">
+        <div class="card bg-c-blue order-card alert alert-success">
           <div class="card-block">
             <h6 class="m-b-20">Total Amount Claimed</h6>
            <h2 class="text-right"><i class="fas fa-list-alt f-left"></i><span>{{total_claim}}</span></h2>
@@ -102,7 +103,7 @@
       </div>
   
       <div class="col-md-4 col-xl-3">
-        <div class="card bg-c-green order-card">
+        <div class="card bg-c-yellow order-card alert alert-warning">
           <div class="card-block">
             <h6 class="m-b-20">Pending Claims</h6>
             <h2 class="text-right"><i class="fas fa-question-circle f-left"></i><span>{{total_active_claims}}</span></h2>

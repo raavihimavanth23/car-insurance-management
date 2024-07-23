@@ -72,14 +72,14 @@
                     <li><strong>Year:</strong> {{ car.car_year }}</li>
                     <li><strong>Car Number:</strong> {{ car.car_number }}</li>
                     <li class="d-flex flex-col row-cols-1 align-items-center justify-content-between"><span><strong>VIN:</strong> {{ car.vin }}</span>
-                       <a class=" text-primary" href="{% url 'add_policy' car.id  %}"> Add Policy <i class="fas fa-arrow-right"></i></a></li>
-                </ul>
+                        <a class=" text-primary" href="{% url 'add_policy' car.id  %}"> Add Policy <i class="fas fa-arrow-right"></i></a></li>
+                    </ul>
                
             </div>
         </div>
     </div>
 </div>
 {% endfor %}
-
+<div class="mb-5"></div>
 </div>
 {% endblock content %}

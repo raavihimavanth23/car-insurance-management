@@ -7,65 +7,89 @@
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
-  <style media="screen">
-    a:link {
-      text-decoration: none;
+  <style>
+    .policy-card {
+        margin-bottom: 20px;
+        box-shadow: 2px 4px 2px 4px #f7f7f7;
+        border:none;
     }
-
-    h6 {
-      text-align: center;
+    .policy-card:hover {
+      border: 2px solid #eee;
     }
-
-    .row {
-      margin: 100px;
+    .policy-header {
+        color: black;
+        padding: 10px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
     }
-  </style>
+    .policy-body {
+        padding: 20px;
+    }
+    .policy-footer {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+    .policy-detail {
+      height: 28px;
+      padding: 8px;
+      background-color: #f7f7f7;
+      margin-bottom: 10px;
+      align-items: center;
+    }
+    .summary-section {
+            background-color: #f7f7f6;
+            padding: 30px 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .summary-section h2 {
+            margin-bottom: 15px;
+        }
+</style>
 </head>
-<br><br>
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Policies</h6>
-    </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-        <th>Serial No.</th>
-          <th>Car</th>
-          <th>Policy</th>
-          <th>Sum Assurance</th>
-          <th>Amount Claimed</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+<div class="container overflow-scroll">
+  <div class="summary-section">
+    <h2>Your Car Insurances</h2>
+    <p>View all your car policies. You can claim car damages and can also renew expired policies.</p>
+</div>
+  <div class="row">
       {% for policy in user_policies %}
-      <tr>
-        <td> {{ forloop.counter }}</td>
-        <td> {{policy.car}}</td>
-        <td> {{policy.policy}}</td>
-        <td> {{policy.sum_assurance}}</td>
-        <td> {{policy.amount_claimed}}</td>
-        <td> {{policy.start_date}}</td>
-        <td> {{policy.end_date}}</td>
-        <td>  {% if policy.is_active %}
-          <span class="badge badge-success bg-success"> Active</span>
-        {% else %}
-          <span class="badge badge-secondary bg-secondary">Expired</span>
-        {% endif %}</td>
-        <td>
-          {% if  not policy.is_active %}
-            <a class="btn btn-success btn-xs" href="{% url 'renew_policy' policy.id  %}" data-toggle="tooltip" data-placement="bottom" title="renew"><span class="glyphicon glyphicon-repeat"></span></a>
-          {% else %}
-            <a class="btn btn-primary btn-xs" href="{% url 'claim_assurance' policy.id  %}" data-toggle="tooltip" data-placement="bottom" title="claim" ><span class="glyphicon glyphicon-edit"></span></a></td>
-          {% endif %}
-        </tr>
+      <div class="col-md-4">
+          <div class="card policy-card">
+              <div class="policy-header alert alert-primary">
+                  <h5 class="display-6">{{ policy.car.car_make }} - {{policy.policy}}</h5>
+              </div>
+              <div class="policy-body">
+                <ul class="list-unstyled padding-20">
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Policy</strong></span><span> {{ policy.policy }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Sum Assurance</strong></span><span> {{ policy.sum_assurance }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Amount Claimed</strong></span><span> {{ policy.amount_claimed }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Start Date</strong> </span><span>{{ policy.start_date }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>End Date</strong></span><span> {{ policy.end_date }}</span></li>
+                    <li class="policy-detail row-cols-3"><span><i class="fas fa-check text-success"></i> <strong>Premium Paid</strong></span><span> {{ policy.policy.premium }}</span></li>
+                </ul>
+                
+            </div>
+              <div class="policy-footer">
+                  <small class="text-muted"> {% if policy.is_active %}
+                    <span class="badge badge-success bg-success"> Active</span>
+                  {% else %}
+                    <span class="badge badge-secondary bg-secondary">Expired</span>
+                  {% endif %}</small>
+                  <small class="text-muted"> {% if  not policy.is_active %}
+                    <a class="btn btn-success btn-xs" href="{% url 'renew_policy' policy.id  %}" data-toggle="tooltip" data-placement="bottom" title="renew"><span class="glyphicon glyphicon-repeat"></span></a>
+                  {% else %}
+                    <a class="btn btn-primary btn-xs" href="{% url 'claim_assurance' policy.id  %}" data-toggle="tooltip" data-placement="bottom" title="claim" ><span class="glyphicon glyphicon-edit"></span></a></td>
+                  {% endif %}</small>
+              </div>
+          </div>
+      </div>
       {% endfor %}
-    </table>
   </div>
 </div>
+<br><br>
 
 <br><br><br><br><br><br>
 {% endblock content %}
