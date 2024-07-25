@@ -42,5 +42,5 @@ gunicorn==20.1.0
 django-core
 boto3
 django-storages
-x23101082-car-insurance==1.0.2
+x23101083-car-insurance==1.0.2
 
