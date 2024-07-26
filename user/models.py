@@ -7,6 +7,7 @@ class Customer(models.Model):
     address = models.CharField(max_length=100)
     phone = models.CharField(max_length=10)
     profile_photo = models.ImageField(upload_to='profile_images/user/',null=True, blank=True)
+    image_src= models.CharField(max_length=1024, blank=True)
     @property
     def get_fullname(self):
         return self.user.first_name+" "+self.user.last_name

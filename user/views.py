@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect
 from . import forms,models
+import requests
 from django import forms as DJFORM
 from django.db.models import Sum
 from django.contrib.auth.models import Group
@@ -25,17 +26,11 @@ import boto3
 #     aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY=')
 # )
 # s3_storage_url = "https://x23101083-carinsurance.s3.eu-west-1.amazonaws.com/"
-import boto3
 import logging
 
-logging.basicConfig(level=logging.DEBUG)
-session = boto3.Session()
-credentials = session.get_credentials()
+logging.basicConfig(level=logging.INFO)
 
 
-# Log the access key id being used
-logging.info(f'AWS Access Key: {credentials.access_key}')
-logging.info(f'AWS Secret Key: {credentials.secret_key}')
 def login_view(request):
     form = forms.UserForm()
     data = {'form':form}
@@ -50,26 +45,29 @@ def login_view(request):
             messages.error(request, 'Invalid username or password.')
     return render(request, 'user/login.html', context = data)
 
+def prepare_image_url(data):
+    return f"{data['url']}{data['fields']['key']}"
 # Create your views here.
 def user_signup_view(request):
     userForm = forms.UserForm()
     customerForm = forms.CustomerForm()
-    # message = {'status':'SUCCESS', 'data':'Registration is mandatory.'}
     data = {'userForm':userForm, 'customerForm': customerForm}
     if request.method == 'POST':
         userForm = forms.UserForm(request.POST)
         customerForm = forms.CustomerForm(request.POST, request.FILES)
-        # print('userForm: ',userForm, 'customerForm: ', customerForm)
         try:
-            if userForm.is_valid() and customerForm.is_valid():
-                user = userForm.save()
-                print('saved user: ', user)
+            if  customerForm.is_valid():
+                user = userForm.save(commit=False)
+                # print('saved user: ', user)
                 customer =  customerForm.save(commit=False)
-                customer.user = user
                 profile_photo  = request.FILES["profile_photo"]
-                # print('profile_pic: ', profile_photo)
-                filename = DocumentHelper.upload(profile_photo, user,s3 = boto3.resource('s3'))
-                # customer.profile_photo.url = s3_storage_url+filename
+                image_api_resp = get_presigned_url(request)
+                print('image_api_response: ', image_api_resp)
+                if(image_api_resp['status']=='SUCCESS') :
+                    print('s3_image_upload_response: ', upload_image_to_s3(image_api_resp['data'], profile_photo))
+                customer.image_src = prepare_image_url(image_api_resp['data'])
+                user.save()
+                customer.user = user
                 customer.save()
                 print('saved customer: ', customer)
                 customer_group = Group.objects.get_or_create(name='CUSTOMER')
@@ -81,11 +79,35 @@ def user_signup_view(request):
         except DJFORM.ValidationError as e:
             print('exception :',str(e))
             messages.error(request, str(e))
-        
+        except DocumentException as e:
+            print('document exception: ',e)
+            messages.error(request, str(e))
+        except Exception as e:
+            print('document exception: ',e)
+            messages.error(request, str(e))
     return render(request, 'user/signup.html', context= data)
+
+
+def upload_image_to_s3(data, file):
+    files = {'file':file.read()}
+    response = requests.post(data['url'], data = data['fields'],files= files)
+    if response.status_code == 200 or response.status_code== 204:
+        return 'Image Uploaded successfully'
+    else:
+        raise DocumentException("Unable to upload profile picture")
+    pass
+
+def get_presigned_url(request):
+    url = 'https://jfkoc29syf.execute-api.eu-west-1.amazonaws.com/staging/image/'  # Replace with the API URL
+    response = requests.post(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise DocumentException("Unable to upload profile image")
 
 @login_required(login_url='login')
 def user_dashboard_view(request):
+    # print('response view: ',get_presigned_url(request))
     total_policies = INS_MODAL.Policy.objects.all().count()
     user_cars = INS_MODAL.Car.objects.all().filter(owner=request.user)
     print('usercars: ', user_cars)
@@ -99,7 +121,7 @@ def user_dashboard_view(request):
     print('totalpol: ',total_policies, 'user_poli: ', user_policies) #'total_claim: ',total_claimed_amount)
     print('user: ', request.user)
     customer = models.Customer.objects.get(user=request.user)
-    print('customer: ', customer)
+    print('customer: ', customer.image_src)
     data= {
         'user' : customer,
         'total_policies': total_policies,
