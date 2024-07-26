@@ -41,6 +41,7 @@ zipp==3.6.0
 gunicorn==20.1.0
 django-core
 boto3
+requests
 django-storages
 x23101083-car-insurance==1.0.2
 
