@@ -29,7 +29,7 @@ import boto3
 import logging
 
 logging.basicConfig(level=logging.INFO)
-
+AWS_IMAGE_API_URL = os.getenv('AWS_IMAGE_API_URL')
 
 def login_view(request):
     form = forms.UserForm()
@@ -56,7 +56,7 @@ def user_signup_view(request):
         userForm = forms.UserForm(request.POST)
         customerForm = forms.CustomerForm(request.POST, request.FILES)
         try:
-            if  customerForm.is_valid():
+            if  userForm.is_valid and customerForm.is_valid():
                 user = userForm.save(commit=False)
                 # print('saved user: ', user)
                 customer =  customerForm.save(commit=False)
@@ -98,8 +98,7 @@ def upload_image_to_s3(data, file):
     pass
 
 def get_presigned_url(request):
-    url = 'https://jfkoc29syf.execute-api.eu-west-1.amazonaws.com/staging/image/'  # Replace with the API URL
-    response = requests.post(url)
+    response = requests.post(AWS_IMAGE_API_URL)
     if response.status_code == 200:
         return response.json()
     else:
