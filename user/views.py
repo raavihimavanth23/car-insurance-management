@@ -61,10 +61,10 @@ def user_signup_view(request):
                 # print('saved user: ', user)
                 customer =  customerForm.save(commit=False)
                 profile_photo  = request.FILES["profile_photo"]
-                image_api_resp = get_presigned_url(request)
+                image_api_resp = DocumentHelper.get_presigned_url(requests, AWS_IMAGE_API_URL)
                 print('image_api_response: ', image_api_resp)
                 if(image_api_resp['status']=='SUCCESS') :
-                    print('s3_image_upload_response: ', upload_image_to_s3(image_api_resp['data'], profile_photo))
+                    print('s3_image_upload_response: ', DocumentHelper.upload_image_to_s3(requests, image_api_resp['data'], profile_photo))
                 customer.image_src = prepare_image_url(image_api_resp['data'])
                 user.save()
                 customer.user = user
@@ -95,7 +95,6 @@ def upload_image_to_s3(data, file):
         return 'Image Uploaded successfully'
     else:
         raise DocumentException("Unable to upload profile picture")
-    pass
 
 def get_presigned_url(request):
     response = requests.post(AWS_IMAGE_API_URL)

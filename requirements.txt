@@ -43,5 +43,5 @@ django-core
 boto3
 requests
 django-storages
-x23101083-car-insurance==1.0.2
+x23101083-car-insurance==1.0.3
 

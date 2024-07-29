@@ -87,28 +87,6 @@ CSRF_COOKIE_SECURE=False
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     } """
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  os.getenv('DB_NAME'),
-        'USER':  os.getenv('DB_USER'),
-        'PASSWORD':  os.getenv('DB_PASSWORD'),
-        'HOST':  os.getenv('DB_HOST'),
-        'PORT':  os.getenv('DB_PORT', default='3306'),
-    }
-} """
-
-if 'DB_RDS' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.getenv('RDS_PORT', default=3306),
-        }
-    }
 if 'DB_EXTERNAL' in os.environ:
     DATABASES = {
         'default': {
@@ -120,16 +98,6 @@ if 'DB_EXTERNAL' in os.environ:
             'PORT': os.getenv('DB_PORT', default=3306),
         }
     }
-""" DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':  'carinsurance',
-        'USER':  'root',
-        'PASSWORD':  'root',
-        'HOST':  'localhost',
-        'PORT':  '3306',
-    }
-} """
 
 
 # Password validation
